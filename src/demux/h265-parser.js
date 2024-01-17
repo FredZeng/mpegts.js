@@ -496,6 +496,54 @@ class H265NaluParser {
     static getLevelString(level_idc) {
         return (level_idc / 30).toFixed(1);
     }
+
+    static getNalUnitTypeName(nal_unit_type) {
+        switch (nal_unit_type) {
+            case 0: return 'TRAIL_N';
+            case 1: return 'TRAIL_R';
+            case 2: return 'TSA_N';
+            case 3: return 'TSA_R';
+            case 4: return 'STSA_N';
+            case 5: return 'STSA_R';
+            case 6: return 'RADL_N';
+            case 7: return 'RADL_R';
+            case 8: return 'RASL_N';
+            case 9: return 'RASL_R';
+            case 10: return 'RSV_VCL_N10';
+            case 12: return 'RSV_VCL_N12';
+            case 14: return 'RSV_VCL_N14';
+            case 11: return 'RSV_VCL_R11';
+            case 13: return 'RSV_VCL_R13';
+            case 15: return 'RSV_VCL_R15';
+            case 16: return 'BLA_W_LP';
+            case 17: return 'BLA_W_RADL';
+            case 18: return 'BLA_N_LP';
+            case 19: return 'IDR_W_RADL';
+            case 20: return 'IDR_N_LP';
+            case 21: return 'CRA_NUT';
+            case 22: return 'RSV_IRAP_VCL22';
+            case 23: return 'RSV_IRAP_VCL23';
+            case 32: return 'VPS_NUT';
+            case 33: return 'SPS_NUT';
+            case 34: return 'PPS_NUT';
+            case 35: return 'AUD_NUT';
+            case 36: return 'EOS_NUT';
+            case 37: return 'EOB_NUT';
+            case 38: return 'FD_NUT';
+            case 39: return 'PREFIX_SEI_NUT';
+            case 40: return 'SUFFIX_SEI_NUT';
+            default: {
+                if (nal_unit_type >= 24 && nal_unit_type <= 31) {
+                    return 'RSV_VCL' + nal_unit_type;
+                } else if (nal_unit_type >= 41 && nal_unit_type <= 47) {
+                    return 'RSV_NVCL' + nal_unit_type;
+                } else if (nal_unit_type >= 48 && nal_unit_type <= 63) {
+                    return 'UNSPEC' + nal_unit_type;
+                }
+                return 'Unspecified';
+            }
+        }
+    }
 }
 
 export default H265NaluParser;

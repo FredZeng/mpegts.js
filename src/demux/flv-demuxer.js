@@ -1461,14 +1461,23 @@ class FLVDemuxer {
                 return;
             }
 
-            let unitType = v.getUint8(offset + lengthSize) & 0x1F;
+            let forbidden_zero_bit = (v.getUint8(offset + lengthSize) & 0x80) >>> 7;
 
-            if (unitType === 19 || unitType === 20) {  // IDR
+            if (forbidden_zero_bit !== 0) {
+                Log.e(this.TAG, `forbidden_zero_bit near offset ${dataOffset + offset + lengthSize} should be 0 but has value ${forbidden_zero_bit}`);
+            }
+
+            let nal_unit_type = (v.getUint8(offset + lengthSize) & 0x7E) >> 1;
+
+            if (nal_unit_type === 19 || nal_unit_type === 20 || nal_unit_type === 21) {  // IDR
                 keyframe = true;
+            } else if (frameType === 1) {
+                Log.w(this.TAG, `nal_unit_type: ${H265Parser.getNalUnitTypeName(nal_unit_type)} is opposite with frameType: key frame`);
+                keyframe = false;
             }
 
             let data = new Uint8Array(arrayBuffer, dataOffset + offset, lengthSize + naluSize);
-            let unit = {type: unitType, data: data};
+            let unit = {type: nal_unit_type, data: data};
             units.push(unit);
             length += data.byteLength;
 
