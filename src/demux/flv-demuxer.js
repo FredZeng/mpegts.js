@@ -1467,7 +1467,7 @@ class FLVDemuxer {
                 Log.e(this.TAG, `forbidden_zero_bit near offset ${dataOffset + offset + lengthSize} should be 0 but has value ${forbidden_zero_bit}`);
             }
 
-            let nal_unit_type = (v.getUint8(offset + lengthSize) & 0x7E) >> 1;
+            let nal_unit_type = (v.getUint8(offset + lengthSize) >> 1) & 0x3F;
 
             if (nal_unit_type === 19 || nal_unit_type === 20 || nal_unit_type === 21) {  // IDR
                 keyframe = true;
